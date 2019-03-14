@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import './products.dart';
 import './product_control.dart';
 
@@ -20,10 +25,25 @@ class ProductManager extends StatefulWidget {
 class _ProductManagerState extends State<ProductManager> {
   List<String> _products = [];
 
+  final _platformChannel = MethodChannel('stayApptive.com/battery');
+
+  Future<Null> _getBatteryLevel() async {
+    String batteryLevel;
+    try {
+      final int result = await _platformChannel.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level is $result %.';
+    } catch (error) {
+      batteryLevel = 'Failed to get battery level.';
+      print(error);
+    }
+    print(batteryLevel);
+  }
+
   @override
   void initState() {
     print('[ProductManager State] initState()');
     _products.add(widget.startingProduct);
+    _getBatteryLevel();
     super.initState();
   }
 
