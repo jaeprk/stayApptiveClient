@@ -2,8 +2,6 @@ import 'package:google_sign_in/google_sign_in.dart' show GoogleSignIn;
 import 'package:googleapis/fitness/v1.dart';
 import 'package:http/http.dart' show BaseRequest, Response, StreamedResponse;
 import 'package:http/io_client.dart';
-import 'package:flutter/services.dart';
-import 'dart:convert';
 
 Future<void> handleSignIn() async {
   try {
@@ -28,16 +26,6 @@ GoogleSignIn _googleSignIn = GoogleSignIn(
   ],
 );
 
-//
-//Future<String> _getTimeZone() async {
-//  final _platformChannel = MethodChannel('stayApptive.com/timeZone');
-//  String timeZone;
-//  try {
-//    timeZone = await _platformChannel.invokeMethod('getTimeZone');
-//  } catch (error) {}
-//  return timeZone;
-//}
-
 DateTime _getStartTime(option) {
   DateTime now = new DateTime.now();
   DateTime result;
@@ -54,34 +42,53 @@ DateTime _getStartTime(option) {
   return result;
 }
 
+Map<String, dynamic> _requestBuilder(String type, [String option]) {
+  if (option == null) option = 'day';
+  if (type == 'activeMinute') {
+    return {
+      "aggregateBy": [
+        {
+          "dataTypeName": "com.google.active_minutes.delta",
+          "dataSourceId":
+              "derived:com.google.active_minutes:com.google.android.gms:merge_active_minutes"
+        }
+      ],
+      "bucketByTime": {"durationMillis": "86400000"}, // divide by 24 hours
+      "startTimeMillis":
+          _getStartTime(option).millisecondsSinceEpoch.toString(),
+      "endTimeMillis": DateTime.now().millisecondsSinceEpoch.toString()
+    };
+  } else if (type == 'step') {
+    return {
+      "aggregateBy": [
+        {
+          "dataTypeName": "com.google.step_count.delta",
+          "dataSourceId":
+              "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps"
+        }
+      ],
+      "bucketByTime": {"durationMillis": "86400000"}, // divide by 24 hours
+      "startTimeMillis":
+          _getStartTime(option).millisecondsSinceEpoch.toString(),
+      "endTimeMillis": DateTime.now().millisecondsSinceEpoch.toString()
+    };
+  } else {
+    return null;
+  }
+}
+
 // option can be 'month' or 'day'
-Future<Map<String, Object>> _googleRequest([String option]) async {
+Future<Map<String, Object>> _Request(String type, [String option]) async {
   if (option == null) {
     option = 'day';
   }
   await _googleSignIn.signIn();
-
   final authHeaders = await _googleSignIn.currentUser.authHeaders;
-  final httpClient = new GoogleHttpClient(authHeaders);
+  var httpClient = new GoogleHttpClient(authHeaders);
+  httpClient = new GoogleHttpClient(authHeaders);
 
-  var _request = {
-    "aggregateBy": [
-      {
-        "dataTypeName": "com.google.step_count.delta",
-        "dataSourceId":
-            "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps"
-      }
-    ],
-    "bucketByTime": {"durationMillis": "86400000"}, // divide by 24 hours
-    //"startTimeMillis": _getMidnight().millisecondsSinceEpoch.toString(),
-    "startTimeMillis": _getStartTime(option).millisecondsSinceEpoch.toString(),
-    "endTimeMillis": DateTime.now().millisecondsSinceEpoch.toString()
-  };
-
-  final data = await new FitnessApi(httpClient)
-      .users
-      .dataset
-      .aggregate(AggregateRequest.fromJson(_request), "me");
+  final data = await new FitnessApi(httpClient).users.dataset.aggregate(
+      AggregateRequest.fromJson(_requestBuilder(type, option)), "me");
   return data.toJson();
 }
 
@@ -99,13 +106,13 @@ class GoogleHttpClient extends IOClient {
       super.head(url, headers: headers..addAll(_headers));
 }
 
-Future<List> getSteps([String option]) async {
-  Map<String, Object> response = await _googleRequest(option);
+Future<List<dynamic>> getData(String type, [String option]) async {
+  Map<String, Object> response = await _Request(type, option);
   var rst = [];
   for (var data in response['bucket']) {
     var stepsContainer = data["dataset"][0]["point"];
     if (stepsContainer.length != 0) {
-      rst.add(stepsContainer[0]["value"][0]["intVal"]);
+      rst.add(stepsContainer[0]["value"][0]["intVal"].toString());
     } else {
       rst.add("0");
     }

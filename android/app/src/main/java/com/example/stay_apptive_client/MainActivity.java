@@ -22,23 +22,6 @@ public class MainActivity extends FlutterActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    new MethodChannel(getFlutterView(), CHANNEL)
-      .setMethodCallHandler(new MethodCallHandler(){
-        @Override
-        public void onMethodCall(MethodCall call, Result result){
-          if (call.method.equals("getTimeZone")) {
-            String timeZone = TimeZone.getDefault().getID();
-            System.out.println("heello");
-            System.out.println(timeZone);
-            System.out.println(TimeZone.getDefault().getDisplayName());
-            if (timeZone != null){
-              result.success(timeZone);
-            } else {
-              result.error("UNAVAILABLE", "Time zone not available", null);
-            }
-          }
-        }
-      });
     GeneratedPluginRegistrant.registerWith(this);
   }
 }
