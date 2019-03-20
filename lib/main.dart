@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import './scoped-models/user_model.dart';
+
 import './pages/dashboard.dart';
+import './pages/recommendation.dart';
+import './pages/healthState.dart';
+import './pages/inputActivity.dart';
+import './pages/goal.dart';
 
 void main() => runApp(MyApp(
       UserModel(),
@@ -23,6 +28,10 @@ class MyApp extends StatelessWidget {
               accentColor: Colors.orange),
           routes: {
             '/': (BuildContext context) => Dashboard(),
+            '/recommendation': (BuildContext context) => Recommendation(),
+            '/healthState': (BuildContext context) => HealthState(),
+            '/goal': (BuildContext context) => Goal(),
+            '/inputActivity': (BuildContext context) => InputActivity()
           },
         ));
   }
