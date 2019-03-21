@@ -44,7 +44,7 @@ class _DashboardState extends State<Dashboard> {
                   margin: EdgeInsets.only(left: 25.0),
                   child: Column(children: [
                     Container(
-                      margin: EdgeInsets.only(top: 30.0),
+                      margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
                           child: Text('healthState'),
@@ -53,7 +53,7 @@ class _DashboardState extends State<Dashboard> {
                           }),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 30.0),
+                      margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
                           child: Text('inputActivity'),
@@ -62,7 +62,7 @@ class _DashboardState extends State<Dashboard> {
                           }),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 30.0),
+                      margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
                           child: Text('goal'),
@@ -71,7 +71,7 @@ class _DashboardState extends State<Dashboard> {
                           }),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: 30.0),
+                      margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
                           child: Text('recommendation'),

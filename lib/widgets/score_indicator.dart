@@ -26,7 +26,7 @@ class _ScoreIndicatorState extends State<ScoreIndicator> {
             child: Flex(direction: Axis.vertical, children: <Widget>[
           Center(
               child: CircularPercentIndicator(
-            radius: 130.0,
+            radius: 160.0,
             lineWidth: 9.0,
             percent: model.stageScore < 2 ? model.stageScore / 2 : 2,
             center: new Text("${(model.stageScore * 100).round()}%",

@@ -25,8 +25,8 @@ class _ActiveMinutesIndicatorState extends State<ActiveMinutesIndicator> {
             child: Flex(direction: Axis.vertical, children: <Widget>[
           Center(
               child: CircularPercentIndicator(
-            radius: 130.0,
-            lineWidth: 9.0,
+            radius: 100.0,
+            lineWidth: 8.0,
             percent: model.activeMinutesGoalPercent < 1
                 ? model.activeMinutesGoalPercent
                 : 1,
