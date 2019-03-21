@@ -13,29 +13,34 @@ class _RecommendationIndicatorState extends State<RecommendationIndicator> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
-      var _fontColor = model.stageScore > 1 ? Colors.teal : Colors.red;
+      String imgSrc = 'assets/Rest.png';
+      String recommendation = '';
+      String message = '';
+
+      if (model.stageScore > 1) {
+        imgSrc = 'assets/Rest.png';
+        recommendation = 'Take a rest';
+        message = 'You are above your schedule';
+      } else if (model.stageScore > 0.75) {
+        imgSrc = 'assets/Bicycle.png';
+        recommendation = 'Go out for light exercise';
+        message = 'You are slight behind your schedule';
+      } else if (model.stageScore > 0.5) {
+        imgSrc = 'assets/Swim.png';
+        recommendation = 'Go out for cardio exercise';
+        message = 'You are behind your schedule';
+      } else {
+        imgSrc = 'assets/Weight.png';
+        recommendation = 'Go out for intense workout';
+        message = 'You are far behind your schedule';
+      }
+
       return Column(children: [
-        Text('Current Progress',
-            style: TextStyle(
-              fontSize: 20,
-              color: _fontColor,
-              decoration: TextDecoration.none,
-            )),
+        Text(recommendation),
         Container(
-            //margin: const EdgeInsets.all(10.0),
-            //padding: const EdgeInsets.all(10.0),
-            child: Flex(direction: Axis.vertical, children: <Widget>[
-          Center(
-              child: CircularPercentIndicator(
-            radius: 130.0,
-            lineWidth: 9.0,
-            percent: model.stageScore < 2 ? model.stageScore / 2 : 2,
-            center: new Text("${(model.stageScore * 100).round()}%",
-                style: TextStyle(color: _fontColor)),
-            backgroundColor: Colors.white24,
-            progressColor: Colors.red,
-          )),
-        ]))
+            child: Image.asset(imgSrc),
+            constraints: BoxConstraints(maxHeight: 130)),
+        Text(message),
       ]);
     });
   }
