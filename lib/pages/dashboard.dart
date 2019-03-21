@@ -47,7 +47,7 @@ class _DashboardState extends State<Dashboard> {
                       margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
-                          child: Text('healthState'),
+                          child: Text('Health State'),
                           onPressed: () {
                             Navigator.pushNamed(context, '/healthState');
                           }),
@@ -56,7 +56,7 @@ class _DashboardState extends State<Dashboard> {
                       margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
-                          child: Text('inputActivity'),
+                          child: Text('Input Activity'),
                           onPressed: () {
                             Navigator.pushNamed(context, '/inputActivity');
                           }),
@@ -65,7 +65,7 @@ class _DashboardState extends State<Dashboard> {
                       margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
-                          child: Text('goal'),
+                          child: Text('Set Goal'),
                           onPressed: () {
                             Navigator.pushNamed(context, '/goal');
                           }),
@@ -74,7 +74,7 @@ class _DashboardState extends State<Dashboard> {
                       margin: EdgeInsets.only(top: 25.0),
                       child: RaisedButton(
                           color: Colors.black,
-                          child: Text('recommendation'),
+                          child: Text('Recommendation'),
                           onPressed: () {
                             Navigator.pushNamed(context, '/recommendation');
                           }),

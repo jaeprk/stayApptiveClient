@@ -20,11 +20,11 @@ class _RecommendationIndicatorState extends State<RecommendationIndicator> {
       if (model.stageScore > 1) {
         imgSrc = 'assets/Rest.png';
         recommendation = 'Take a rest';
-        message = 'You are above your schedule';
+        message = 'You are beyond your schedule';
       } else if (model.stageScore > 0.75) {
         imgSrc = 'assets/Bicycle.png';
         recommendation = 'Go out for light exercise';
-        message = 'You are slight behind your schedule';
+        message = 'You are slightly behind your schedule';
       } else if (model.stageScore > 0.5) {
         imgSrc = 'assets/Swim.png';
         recommendation = 'Go out for cardio exercise';

@@ -20,23 +20,42 @@ class UserModel extends Model {
   int _stageActiveMinutes = 1;
   double _stageScore = 0;
 
+  int get stageSteps {
+    return _stageSteps;
+  }
+
+  int get stageStepGoal {
+    return _stageStepGoal;
+  }
+
+  int get stageActiveMinutes {
+    return _stageActiveMinutes;
+  }
+
+  int get stageActiveMinuteGoal {
+    return _stageActiveMinuteGoal;
+  }
+
   void _updateStage() async {
     int currentStage = _getStage();
     _stage = currentStage;
-    String now = new DateTime.now().toString();
-    String stage = now + currentStage.toString();
+    DateTime now = new DateTime.now();
+    String today = new DateTime(now.year, now.month, now.day).toString();
+    String stage = today + currentStage.toString();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List tmp = await _buildPersonalizedGoalDistribution();
     var stageDistribution = tmp[currentStage];
     var customActivity = prefs.getInt(stage) ?? 0;
     int stageStepGoal = (_stepsGoal * stageDistribution).toInt();
     var stageActiveMinuteGoal =
-        (_activeMinutesGoal * stageDistribution).toInt() - customActivity;
+        (_activeMinutesGoal * stageDistribution).toInt();
+    stageActiveMinuteGoal =
+        stageActiveMinuteGoal > 0 ? stageActiveMinuteGoal : 1;
     _stageStepGoal = stageStepGoal;
-    _stageActiveMinuteGoal = stageActiveMinuteGoal;
     _stageSteps = int.parse((await getData('step', 'day', '14400000')).last);
     _stageActiveMinutes =
-        int.parse((await getData('activeMinute', 'day', '14400000')).last);
+        int.parse((await getData('activeMinute', 'day', '14400000')).last) +
+            customActivity;
     _stageScore = _getScore();
   }
 
@@ -93,10 +112,18 @@ class UserModel extends Model {
   }
 
   Future<void> _updateData() async {
+    var now = new DateTime.now();
+    String today = new DateTime(now.year, now.month, now.day).toString();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     var tmpSteps = await getData('step', 'day');
     var tmpActiveMinutes = await getData('activeMinute', 'day');
+    var customActivity = (await prefs.getInt(today + '0')) ?? 0;
+    customActivity += (await prefs.getInt(today + '1')) ?? 0;
+    customActivity += (await prefs.getInt(today + '2')) ?? 0;
+    customActivity += (await prefs.getInt(today + '3')) ?? 0;
     _currentSteps = int.parse(tmpSteps.last);
-    _currentActiveMinutes = int.parse(tmpActiveMinutes.last);
+    _currentActiveMinutes = int.parse(tmpActiveMinutes.last) + customActivity;
 
     await _updateGoals();
     await _updateStage();
@@ -106,12 +133,10 @@ class UserModel extends Model {
     // print(_stepsGoal);
     // print(_activeMinutesGoal);
     // print(_stage);
-    // print(_stageStepGoal);
+    // print(_stageScore);
     // print(_stageActiveMinuteGoal);
     // print(_stageSteps);
     // print(_stageActiveMinutes);
-    print(_stageScore);
-    print('state updated');
     notifyListeners();
   }
 
@@ -143,19 +168,18 @@ class UserModel extends Model {
 
   double _getScore() {
     double stepProgress = _stageSteps / _stageStepGoal;
-    double activeMinutesProgress = _stageActiveMinutes / _stageActiveMinuteGoal;
+    double activeMinutesProgress = _stageActiveMinutes /
+        (_stageActiveMinuteGoal == 0.0 ? 1.0 : _stageActiveMinuteGoal);
     DateTime now = new DateTime.now();
     DateTime today = new DateTime(now.year, now.month, now.day);
     double timeProgress =
         ((now.millisecondsSinceEpoch - today.millisecondsSinceEpoch) %
                 14400000) /
             14400000;
-    print(stepProgress);
-    print(activeMinutesProgress);
-    print(timeProgress);
-    return (stepProgress > activeMinutesProgress
+    double rst = (stepProgress > activeMinutesProgress
             ? stepProgress
             : activeMinutesProgress) /
-        timeProgress;
+        (timeProgress == 0 ? 1 : timeProgress);
+    return rst > 10 ? 10.0 : rst;
   }
 }

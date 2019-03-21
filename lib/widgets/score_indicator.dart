@@ -12,7 +12,7 @@ class _ScoreIndicatorState extends State<ScoreIndicator> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
-      var _fontColor = model.stageScore > 1 ? Colors.teal : Colors.red;
+      var _fontColor = model.stageScore > 1 ? Colors.green : Colors.red;
       return Column(children: [
         Text('Current Progress',
             style: TextStyle(
@@ -28,11 +28,11 @@ class _ScoreIndicatorState extends State<ScoreIndicator> {
               child: CircularPercentIndicator(
             radius: 160.0,
             lineWidth: 9.0,
-            percent: model.stageScore < 2 ? model.stageScore / 2 : 2,
+            percent: model.stageScore < 2 ? model.stageScore / 2 : 1,
             center: new Text("${(model.stageScore * 100).round()}%",
                 style: TextStyle(color: _fontColor)),
             backgroundColor: Colors.white24,
-            progressColor: Colors.red,
+            progressColor: _fontColor,
           )),
         ]))
       ]);

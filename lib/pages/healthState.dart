@@ -13,10 +13,16 @@ class _HealthStateState extends State<HealthState> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {
       return Scaffold(
-        appBar: AppBar(title: Text('StayApptive')),
+        appBar: AppBar(title: Text('Health State')),
         body: Column(
           children: [
             ScoreIndicator(),
+            Container(margin: EdgeInsets.only(top: 20)),
+            Text(
+                'Steps progress : ${model.stageSteps} / ${model.stageStepGoal}'),
+            Container(margin: EdgeInsets.only(top: 20)),
+            Text(
+                'Active Minutes progress : ${model.stageActiveMinutes} / ${model.stageActiveMinuteGoal}'),
           ],
         ),
         backgroundColor: Colors.black,
