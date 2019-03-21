@@ -36,13 +36,18 @@ DateTime _getStartTime(option) {
     case 'month':
       result = new DateTime(now.year, now.month);
       break;
+    case '30':
+      result = new DateTime(now.year, now.month, now.day)
+          .subtract(new Duration(days: 30));
+      break;
     default:
       result = null;
   }
   return result;
 }
 
-Map<String, dynamic> _requestBuilder(String type, [String option]) {
+Map<String, dynamic> _requestBuilder(
+    String type, String option, String bucket) {
   if (option == null) option = 'day';
   if (type == 'activeMinute') {
     return {
@@ -53,7 +58,7 @@ Map<String, dynamic> _requestBuilder(String type, [String option]) {
               "derived:com.google.active_minutes:com.google.android.gms:merge_active_minutes"
         }
       ],
-      "bucketByTime": {"durationMillis": "86400000"}, // divide by 24 hours
+      "bucketByTime": {"durationMillis": bucket}, // divide by 24 hours
       "startTimeMillis":
           _getStartTime(option).millisecondsSinceEpoch.toString(),
       "endTimeMillis": DateTime.now().millisecondsSinceEpoch.toString()
@@ -67,7 +72,7 @@ Map<String, dynamic> _requestBuilder(String type, [String option]) {
               "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps"
         }
       ],
-      "bucketByTime": {"durationMillis": "86400000"}, // divide by 24 hours
+      "bucketByTime": {"durationMillis": bucket}, // divide by 24 hours
       "startTimeMillis":
           _getStartTime(option).millisecondsSinceEpoch.toString(),
       "endTimeMillis": DateTime.now().millisecondsSinceEpoch.toString()
@@ -78,17 +83,15 @@ Map<String, dynamic> _requestBuilder(String type, [String option]) {
 }
 
 // option can be 'month' or 'day'
-Future<Map<String, Object>> _Request(String type, [String option]) async {
-  if (option == null) {
-    option = 'day';
-  }
+Future<Map<String, Object>> _Request(
+    String type, String option, String bucket) async {
   await _googleSignIn.signIn();
   final authHeaders = await _googleSignIn.currentUser.authHeaders;
   var httpClient = new GoogleHttpClient(authHeaders);
   httpClient = new GoogleHttpClient(authHeaders);
 
   final data = await new FitnessApi(httpClient).users.dataset.aggregate(
-      AggregateRequest.fromJson(_requestBuilder(type, option)), "me");
+      AggregateRequest.fromJson(_requestBuilder(type, option, bucket)), "me");
   return data.toJson();
 }
 
@@ -106,8 +109,15 @@ class GoogleHttpClient extends IOClient {
       super.head(url, headers: headers..addAll(_headers));
 }
 
-Future<List<dynamic>> getData(String type, [String option]) async {
-  Map<String, Object> response = await _Request(type, option);
+Future<List<dynamic>> getData(String type,
+    [String option, String bucket]) async {
+  if (option == null) {
+    option = 'day';
+  }
+  if (bucket == null) {
+    bucket = "86400000";
+  }
+  Map<String, Object> response = await _Request(type, option, bucket);
   var rst = [];
   for (var data in response['bucket']) {
     var stepsContainer = data["dataset"][0]["point"];

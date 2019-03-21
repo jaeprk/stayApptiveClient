@@ -26,6 +26,7 @@ class _HealthStateState extends State<HealthState> {
                 })
           ],
         ),
+        backgroundColor: Colors.black,
       );
     });
   }

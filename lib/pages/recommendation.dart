@@ -26,6 +26,7 @@ class _RecommendationState extends State<Recommendation> {
                 })
           ],
         ),
+        backgroundColor: Colors.black,
       );
     });
   }

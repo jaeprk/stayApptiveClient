@@ -26,6 +26,7 @@ class _InputActivityState extends State<InputActivity> {
                 })
           ],
         ),
+        backgroundColor: Colors.black,
       );
     });
   }

@@ -7,6 +7,8 @@ import './pages/recommendation.dart';
 import './pages/healthState.dart';
 import './pages/inputActivity.dart';
 import './pages/goal.dart';
+import './pages/stepHistory.dart';
+import './pages/activeMinuteHistory.dart';
 
 void main() => runApp(MyApp(
       UserModel(),
@@ -28,10 +30,18 @@ class MyApp extends StatelessWidget {
               accentColor: Colors.orange),
           routes: {
             '/': (BuildContext context) => Dashboard(),
-            '/recommendation': (BuildContext context) => Recommendation(),
-            '/healthState': (BuildContext context) => HealthState(),
-            '/goal': (BuildContext context) => Goal(),
-            '/inputActivity': (BuildContext context) => InputActivity()
+            '/recommendation': (BuildContext context) =>
+                Recommendation(), // gets health state and show recommandation
+            '/healthState': (BuildContext context) =>
+                HealthState(), // gets health state
+            '/goal': (BuildContext context) =>
+                Goal(), // show currunt goal and let the user change it
+            '/inputActivity': (BuildContext context) =>
+                InputActivity(), // input activity
+            '/stepHistory': (BuildContext context) =>
+                StepHistory(), // show step history of the month
+            '/activeMinuteHistory': (BuildContext context) =>
+                ActiveMinuteHistory() // show active minute history of the month
           },
         ));
   }

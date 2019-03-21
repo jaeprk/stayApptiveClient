@@ -5,12 +5,12 @@ import '../widgets/active_minutes_indicator.dart';
 import '../scoped-models/user_model.dart';
 // This class manages goals
 
-class Goal extends StatefulWidget {
+class StepHistory extends StatefulWidget {
   @override
-  _GoalState createState() => _GoalState();
+  _StepHistoryState createState() => _StepHistoryState();
 }
 
-class _GoalState extends State<Goal> {
+class _StepHistoryState extends State<StepHistory> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<UserModel>(builder: (context, child, model) {

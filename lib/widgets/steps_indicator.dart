@@ -25,7 +25,7 @@ class _StepsIndicatorState extends State<StepsIndicator> {
             child: Flex(direction: Axis.vertical, children: <Widget>[
           Center(
               child: CircularPercentIndicator(
-            radius: 160.0,
+            radius: 130.0,
             lineWidth: 9.0,
             percent: model.stepsGoalPercent < 1 ? model.stepsGoalPercent : 1,
             center: new Text("${model.currentSteps} / ${model.stepsGoal}"),
